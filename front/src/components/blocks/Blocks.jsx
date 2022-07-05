@@ -35,9 +35,9 @@ const Blocks = () => {
         return blockData.map((v, k) => {
             return (
                 <ul key={k}>
-                    <li>{v.number}</li>
-                    <li>{v.blockHash}</li>
-                    <li>{v.miner}</li>
+                    <li>Number : {v.number}</li>
+                    <li>Block Hash : {v.blockHash}</li>
+                    <li>Miner : {v.miner}</li>
                 </ul>
             );
         });
@@ -45,7 +45,7 @@ const Blocks = () => {
 
     return (
         <div>
-            Connected?
+            Blocks
             {dataList()}
         </div>
     );

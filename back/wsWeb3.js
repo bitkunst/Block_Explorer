@@ -1,25 +1,25 @@
 const Web3 = require('web3');
-const { BlockHeader } = require('./database/models');
+const { BlockHeader, Transaction } = require('./database/models');
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://127.0.0.1:9005'));
 
 const wsWeb3 = (io) => {
     web3.eth.subscribe('newBlockHeaders', async (error, result) => {
-        if (!error) {
-            const {
-                number,
-                hash: blockHash,
-                miner,
-                difficulty,
-                nonce,
-                size,
-                gasUsed,
-                gasLimit,
-                baseFeePerGas,
-                extraData,
-                timestamp,
-            } = result;
+        try {
+            if (!error) {
+                const {
+                    number,
+                    hash: blockHash,
+                    miner,
+                    difficulty,
+                    nonce,
+                    size,
+                    gasUsed,
+                    gasLimit,
+                    baseFeePerGas,
+                    extraData,
+                    timestamp,
+                } = result;
 
-            try {
                 const blockData = {
                     number,
                     blockHash,
@@ -33,22 +33,46 @@ const wsWeb3 = (io) => {
                     extraData,
                     timestamp,
                 };
-                const result = await BlockHeader.create(blockData);
-            } catch (err) {
-                console.log(err);
+                await BlockHeader.create(blockData);
+
+                const txHashs = [];
+                if (blockData.gasUsed !== 0) {
+                    const txBlock = await web3.eth.getBlock(number);
+                    txBlock.transactions.forEach((v) => {
+                        txHashs.push(v);
+                    });
+                }
+                for (const hash of txHashs) {
+                    const tx = await web3.eth.getTransaction(hash);
+                    const txData = {
+                        txHash: tx.hash,
+                        blockNum: tx.blockNumber,
+                        timestamp: blockData.timestamp,
+                        from: tx.from,
+                        to: tx.to,
+                        value: tx.value,
+                        gas: tx.gas,
+                        gasPrice: parseInt(tx.gasPrice),
+                    };
+                    await Transaction.create(txData);
+                }
             }
+        } catch (err) {
+            console.log(err);
         }
     });
 
     io.on('connection', (socket) => {
         console.log('socket opened!!');
         web3.eth.subscribe('newBlockHeaders', async (error, result) => {
-            if (!error) {
-                try {
+            try {
+                if (!error) {
                     socket.emit('newBlock');
-                } catch (err) {
-                    console.log(err);
+
+                    socket.emit('newTx');
                 }
+            } catch (err) {
+                console.log(err);
             }
         });
 

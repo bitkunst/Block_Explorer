@@ -1,9 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Link, Routes, Route } from 'react-router-dom';
+import Search from './Search';
 
 import styled from 'styled-components';
 
 const Layout = styled.div`
+    margin-top: 30px;
     width: 100%
     height: 10%;
     display: flex;
@@ -11,7 +13,7 @@ const Layout = styled.div`
 `;
 
 const Logo = styled.h1`
-    width: 40%;
+    width: 15%;
     height: 10%;
 `;
 
@@ -22,29 +24,38 @@ const NavList = styled.li`
 `;
 
 const NavBar = styled.ul`
-    width: 40%;
+    width: 30%;
     height: 50px;
-    background: yellow;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
+    padding: 0;
 `;
 
 const Header = () => {
     return (
         <Layout>
             <Logo>
-                <Link to="/">Kunst Explorer</Link>
+                <Link to="/" style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }}>
+                    The Explorer
+                </Link>
             </Logo>
+            <Search to="/" />
             <NavBar>
                 <NavList>
-                    <Link to="/">Home</Link>
+                    <Link to="/" style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }}>
+                        Home
+                    </Link>
                 </NavList>
                 <NavList>
-                    <Link to="/blocks">Blocks</Link>
+                    <Link to="/blocks" style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }}>
+                        Blocks
+                    </Link>
                 </NavList>
                 <NavList>
-                    <Link to="/transactions">Transactions</Link>
+                    <Link to="/transactions" style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }}>
+                        Transactions
+                    </Link>
                 </NavList>
             </NavBar>
         </Layout>

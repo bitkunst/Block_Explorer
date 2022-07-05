@@ -37,6 +37,5 @@ httpServer.listen(4000, async () => {
         console.log('back server onload');
     } catch (err) {
         console.log(err);
-        res.status(500).send('Internal Server Error');
     }
 });
