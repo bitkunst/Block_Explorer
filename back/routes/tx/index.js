@@ -6,8 +6,4 @@ router.get('/info', txController.getInfo);
 
 router.get('/prev', txController.getPrev);
 
-router.post('/searchAddress', txController.searchAddress);
-
-router.post('/searchHash', txController.searchHash);
-
 module.exports = router;

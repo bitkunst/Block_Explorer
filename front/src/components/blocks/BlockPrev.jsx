@@ -7,10 +7,6 @@ const BlockPrev = (props) => {
     const [blockPrevData, setBlockPrevData] = useState([]);
 
     useEffect(() => {
-        // const socket = socketIO.connect('http://localhost:4000', {
-        //     transports: ['websocket'],
-        // });
-
         const init = async () => {
             const result = await getBlockPrev();
             setBlockPrevData(result);

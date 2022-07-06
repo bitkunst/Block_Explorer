@@ -1,28 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import Tx from './address/Tx';
+import Mined from './address/Mined';
 
 const Found = () => {
     const { state } = useLocation();
+    const [flag, setFlag] = useState(0);
 
     console.log(state);
 
-    if (state.number) {
+    if (state.block) {
+        const { data } = state;
         const dataList = () => {
             return (
                 <>
-                    <h2>Block Height : {state.number}</h2>
+                    <h2>Block Height : {data.number}</h2>
                     <ul>
-                        <li>Block Height : {state.number}</li>
-                        <li>timestamp : {state.timestamp}</li>
-                        <li>Block Hash : {state.blockHash}</li>
-                        <li>Miner : {state.miner}</li>
-                        <li>Difficulty : {state.difficulty}</li>
-                        <li>Nonce : {state.nonce}</li>
-                        <li>Size : {state.size ? state.size : 'null'}</li>
-                        <li>gasUsed : {state.gasUsed}</li>
-                        <li>gasLimit : {state.gasLimit}</li>
-                        <li>baseFeePerGas : {state.baseFeePerGas ? state.baseFeePerGas : 'null'}</li>
-                        <li>extraData : {state.extraData}</li>
+                        <li>Block Height : {data.number}</li>
+                        <li>timestamp : {data.timestamp}</li>
+                        <li>Block Hash : {data.blockHash}</li>
+                        <li>Miner : {data.miner}</li>
+                        <li>Difficulty : {data.difficulty}</li>
+                        <li>Nonce : {data.nonce}</li>
+                        <li>Size : {data.size ? data.size : 'null'}</li>
+                        <li>gasUsed : {data.gasUsed}</li>
+                        <li>gasLimit : {data.gasLimit}</li>
+                        <li>baseFeePerGas : {data.baseFeePerGas ? data.baseFeePerGas : 'null'}</li>
+                        <li>extraData : {data.extraData}</li>
                     </ul>
                 </>
             );
@@ -33,19 +37,20 @@ const Found = () => {
 
     if (state.txHash) {
         const dataList = () => {
+            const { data } = state;
             return (
                 <>
-                    <h2>Tx Hash : {state.txHash}</h2>
+                    <h2>Tx Hash : {data.txHash}</h2>
                     <ul>
-                        <li>Transaction Hash : {state.txHash}</li>
-                        <li>Block Height : {state.blockNum}</li>
-                        <li>Timestamp : {state.timestamp}</li>
-                        <li>From : {state.from}</li>
-                        <li>To : {state.to}</li>
-                        <li>Value : {state.value} ETH</li>
-                        <li>Gas : {state.gas}</li>
+                        <li>Transaction Hash : {data.txHash}</li>
+                        <li>Block Height : {data.blockNum}</li>
+                        <li>Timestamp : {data.timestamp}</li>
+                        <li>From : {data.from}</li>
+                        <li>To : {data.to}</li>
+                        <li>Value : {data.value} ETH</li>
+                        <li>Gas : {data.gas}</li>
                         <li>
-                            Gas Price : {state.gasPrice} wei ({state.gasPrice / 10 ** 9} Gwei)
+                            Gas Price : {data.gasPrice} wei ({data.gasPrice / 10 ** 9} Gwei)
                         </li>
                     </ul>
                 </>
@@ -53,6 +58,20 @@ const Found = () => {
         };
 
         return <div>{dataList()}</div>;
+    }
+
+    if (state.address) {
+        const { txData, minedBlocks: minedData } = state;
+
+        return (
+            <>
+                <ul>
+                    <li onClick={() => setFlag(0)}>Transactions</li>
+                    <li onClick={() => setFlag(1)}>Mined Blocks</li>
+                </ul>
+                <div>{flag === 0 ? <Tx txData={txData} /> : <Mined minedData={minedData} />}</div>
+            </>
+        );
     }
 
     return <div>Found!!</div>;

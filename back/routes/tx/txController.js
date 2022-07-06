@@ -17,7 +17,7 @@ const getPrev = async (req, res) => {
     try {
         const result = await Transaction.findAll({ limit: 5, order: [['blockNum', 'DESC']] });
 
-        modifiedResult = [];
+        let modifiedResult = [];
         result.reduce((acc, v) => {
             const data = v.toJSON();
             data.value = web3.utils.fromWei(data.value, 'ether');
@@ -32,45 +32,7 @@ const getPrev = async (req, res) => {
     }
 };
 
-const searchAddress = async (req, res) => {
-    const { input } = req.body;
-    try {
-        const resultFrom = await Transaction.findAll({ where: { from: input } });
-        const resultTo = await Transaction.findAll({ where: { to: input } });
-
-        if (resultFrom[0] === undefined && resultTo[0] === undefined) {
-            throw new Error('no data');
-        }
-        const result = {
-            resultFrom,
-            resultTo,
-        };
-
-        res.json(result);
-    } catch (err) {
-        res.json({ error: 1 });
-    }
-};
-
-const searchHash = async (req, res) => {
-    const { input } = req.body;
-    try {
-        const result = await Transaction.findOne({ where: { txHash: input } });
-        if (result === undefined) {
-            throw new Error('no data');
-        }
-        const data = result.toJSON();
-        data.value = web3.utils.fromWei(data.value, 'ether');
-
-        res.json(data);
-    } catch (err) {
-        res.json({ error: 1 });
-    }
-};
-
 module.exports = {
     getInfo,
     getPrev,
-    searchAddress,
-    searchHash,
 };

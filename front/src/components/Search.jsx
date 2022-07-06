@@ -18,7 +18,7 @@ const Search = ({ to, ...rest }) => {
     const submitHandler = async (e) => {
         e.preventDefault();
         const { selected, inputData } = e.target;
-        console.log(selected.value, inputData.value);
+
         const result = await searchData(selected.value, inputData.value);
 
         if (result.error === 1) {
@@ -35,8 +35,8 @@ const Search = ({ to, ...rest }) => {
             <form className={styles.form} onSubmit={submitHandler}>
                 <select id="selected" className={styles.select}>
                     <option value="address">Address</option>
-                    <option value="txHash">Tx Hash</option>
                     <option value="blockNum">Block</option>
+                    <option value="txHash">Tx Hash</option>
                 </select>
                 <input id="inputData" placeholder="Search by Address/Tx Hash/Block" className={styles.input} />
                 <input type="submit" className={styles.btn} value="search" />
