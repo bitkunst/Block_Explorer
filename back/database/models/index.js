@@ -6,12 +6,12 @@ const db = {};
 
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-const BlockHeader = require('./blockHeader')(sequelize, DataTypes);
+const Block = require('./block')(sequelize, DataTypes);
 const Transaction = require('./transaction')(sequelize, DataTypes);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-db.BlockHeader = BlockHeader;
+db.Block = Block;
 db.Transaction = Transaction;
 
 module.exports = db;

@@ -1,39 +1,71 @@
 const Web3 = require('web3');
-const { BlockHeader, Transaction } = require('./database/models');
+const { Block, Transaction } = require('./database/models');
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://127.0.0.1:9005'));
 
-const wsWeb3 = (io) => {
+const wsWeb3 = async (io) => {
+    const curBlockNum = await web3.eth.getBlockNumber();
+    const dbBlocks = await Block.findAll();
+
+    if (dbBlocks.length < curBlockNum) {
+        const blockArr = [];
+        for (let i = dbBlocks.length + 1; i <= curBlockNum; i++) {
+            const block = await web3.eth.getBlock(i, true);
+            blockArr.push(block);
+        }
+
+        blockArr.forEach(async (v) => {
+            const newBlock = {
+                number: v.number,
+                blockHash: v.hash,
+                miner: v.miner,
+                difficulty: v.difficulty,
+                nonce: v.nonce,
+                size: v.size,
+                gasUsed: v.gasUsed,
+                gasLimit: v.gasLimit,
+                transactions: v.transactions.length,
+                extraData: v.extraData,
+                timestamp: v.timestamp,
+            };
+            await Block.create(newBlock);
+        });
+    }
+
     web3.eth.subscribe('newBlockHeaders', async (error, result) => {
         try {
             if (!error) {
-                const {
-                    number,
-                    hash: blockHash,
-                    miner,
-                    difficulty,
-                    nonce,
-                    size,
-                    gasUsed,
-                    gasLimit,
-                    baseFeePerGas,
-                    extraData,
-                    timestamp,
-                } = result;
+                // const {
+                //     number,
+                //     hash: blockHash,
+                //     miner,
+                //     difficulty,
+                //     nonce,
+                //     size,
+                //     gasUsed,
+                //     gasLimit,
+                //     baseFeePerGas,
+                //     extraData,
+                //     timestamp,
+                // } = result;
+
+                const { number } = result;
+
+                const block = await web3.eth.getBlock(number, true);
 
                 const blockData = {
-                    number,
-                    blockHash,
-                    miner,
-                    difficulty,
-                    nonce,
-                    size,
-                    gasUsed,
-                    gasLimit,
-                    baseFeePerGas,
-                    extraData,
-                    timestamp,
+                    number: block.number,
+                    blockHash: block.hash,
+                    miner: block.miner,
+                    difficulty: block.difficulty,
+                    nonce: block.nonce,
+                    size: block.size,
+                    gasUsed: block.gasUsed,
+                    gasLimit: block.gasLimit,
+                    transactions: block.transactions.length,
+                    extraData: block.extraData,
+                    timestamp: block.timestamp,
                 };
-                await BlockHeader.create(blockData);
+                await Block.create(blockData);
 
                 const txHashs = [];
                 if (blockData.gasUsed !== 0) {
@@ -67,6 +99,7 @@ const wsWeb3 = (io) => {
         web3.eth.subscribe('newBlockHeaders', async (error, result) => {
             try {
                 if (!error) {
+                    console.log('구독중aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
                     socket.emit('newBlock');
 
                     socket.emit('newTx');

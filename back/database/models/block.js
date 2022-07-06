@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const BlockHeader = sequelize.define(
-        'BlockHeader',
+    const Block = sequelize.define(
+        'Block',
         {
             number: {
                 type: DataTypes.BIGINT,
@@ -35,8 +35,8 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            baseFeePerGas: {
-                type: DataTypes.FLOAT,
+            transactions: {
+                type: DataTypes.INTEGER,
                 allowNull: true,
             },
             extraData: {
@@ -49,11 +49,11 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         {
-            tableName: 'BlockHeader',
-            modelName: 'BlockHeader',
+            tableName: 'Block',
+            modelName: 'Block',
             timestamps: false,
             charset: 'utf8mb4',
         },
     );
-    return BlockHeader;
+    return Block;
 };

@@ -11,6 +11,7 @@ const Found = () => {
 
     if (state.block) {
         const { data } = state;
+        console.log(data);
         const dataList = () => {
             return (
                 <>
@@ -25,7 +26,7 @@ const Found = () => {
                         <li>Size : {data.size ? data.size : 'null'}</li>
                         <li>gasUsed : {data.gasUsed}</li>
                         <li>gasLimit : {data.gasLimit}</li>
-                        <li>baseFeePerGas : {data.baseFeePerGas ? data.baseFeePerGas : 'null'}</li>
+                        <li>Transactions : {data.transactions}</li>
                         <li>extraData : {data.extraData}</li>
                     </ul>
                 </>
@@ -74,7 +75,20 @@ const Found = () => {
         );
     }
 
-    return <div>Found!!</div>;
+    return (
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+                fontWeight: 'bold',
+                fontSize: '150px',
+            }}
+        >
+            <div style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}>NO DATA</div>
+        </div>
+    );
 };
 
 export default Found;

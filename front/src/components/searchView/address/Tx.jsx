@@ -8,7 +8,7 @@ const Tx = (props) => {
     const dataList = () => {
         return txData.map((v, k) => {
             return (
-                <ul>
+                <ul key={k}>
                     <li>Tx Hash : {v.txHash}</li>
                     <li>Block : {v.blockNum}</li>
                     <li>Time : {v.timestamp}</li>

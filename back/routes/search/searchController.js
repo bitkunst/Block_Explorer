@@ -1,4 +1,4 @@
-const { BlockHeader, Transaction } = require('../../database/models');
+const { Block, Transaction } = require('../../database/models');
 
 const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://127.0.0.1:9005'));
@@ -7,7 +7,7 @@ const block = async (req, res) => {
     const { input } = req.body;
 
     try {
-        const result = await BlockHeader.findOne({ where: { number: parseInt(input) } });
+        const result = await Block.findOne({ where: { number: parseInt(input) } });
 
         if (result === undefined) {
             throw new Error('no data');
@@ -23,7 +23,7 @@ const address = async (req, res) => {
     try {
         const resultFrom = await Transaction.findAll({ where: { from: input } });
         const resultTo = await Transaction.findAll({ where: { to: input } });
-        const resultMiner = await BlockHeader.findAll({ where: { miner: input }, order: [['number', 'DESC']] });
+        const resultMiner = await Block.findAll({ where: { miner: input }, order: [['number', 'DESC']] });
 
         if (resultFrom[0] === undefined && resultTo[0] === undefined && resultMiner[0] === undefined) {
             throw new Error('no data');

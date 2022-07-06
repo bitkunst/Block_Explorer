@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import getBlockPrev from '../../utils/getBlockPrev';
 import BlockPrevTable from '../table/BlockPrevTable';
 
 const BlockPrev = (props) => {
     const { socket } = props;
     const [blockPrevData, setBlockPrevData] = useState([]);
+
+    console.log(socket);
 
     useEffect(() => {
         const init = async () => {
