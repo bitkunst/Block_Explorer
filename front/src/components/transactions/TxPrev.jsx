@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import getTxPrev from '../../utils/getTxPrev';
 import TxPrevTable from '../table/TxPrevTable';
 
