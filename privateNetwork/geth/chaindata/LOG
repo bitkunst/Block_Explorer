@@ -18,3 +18,15 @@
 16:02:58.797012 db@open done T·52.9017ms
 16:13:12.045155 db@close closing
 16:13:12.045271 db@close done T·116.6µs
+=============== Jul 7, 2022 (KST) ===============
+16:14:39.357969 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+16:14:39.358162 version@stat F·[1] S·52KiB[52KiB] Sc·[0.25]
+16:14:39.358242 db@open opening
+16:14:39.358363 journal@recovery F·1
+16:14:39.363232 journal@recovery recovering @3
+16:14:39.372263 memdb@flush created L0@5 N·472 S·24KiB "\x02Ţ..\xc7%/,v1096":"\xfd\xf5\x80..\xf7 \xb5,v1084"
+16:14:39.376641 version@stat F·[2] S·76KiB[76KiB] Sc·[0.50]
+16:14:39.405745 db@janitor F·4 G·0
+16:14:39.405867 db@open done T·47.6048ms
+16:16:36.726316 db@close closing
+16:16:36.726461 db@close done T·140.9µs
