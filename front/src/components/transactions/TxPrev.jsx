@@ -7,49 +7,26 @@ const TxPrev = (props) => {
     const [txPrevData, setTxPrevData] = useState([]);
 
     useEffect(() => {
-        // const socket = socketIO.connect('http://localhost:4000', {
-        //     transports: ['websocket'],
-        // });
-
         const init = async () => {
             const result = await getTxPrev();
             setTxPrevData(result);
         };
 
         init();
+    }, []);
 
-        socket.on('newTx', () => {
-            init();
+    useEffect(() => {
+        socket.on('newTx', (data) => {
+            const prevArr = [...data, ...txPrevData];
+            const newTxPrevData = prevArr.slice(0, 5);
+            setTxPrevData(newTxPrevData);
         });
-
-        return () => {
-            socket.disconnect();
-        };
-    }, [socket]);
-
-    // const dataList = useCallback(() => {
-    //     return txPrevData.map((v, k) => {
-    //         return (
-    //             <ul key={k}>
-    //                 <li>txHash : {v.txHash}</li>
-    //                 <li>from : {v.from}</li>
-    //                 <li>to : {v.to}</li>
-    //             </ul>
-    //         );
-    //     });
-    // }, [txPrevData]);
-
-    // return (
-    //     <div>
-    //         Latest Transactions
-    //         {dataList()}
-    //     </div>
-    // );
+    }, [txPrevData]);
 
     return (
         <>
             <h2>Latest Transactions</h2>
-            <TxPrevTable data={txPrevData} rowsPerPage={5} />
+            <TxPrevTable data={txPrevData} />
         </>
     );
 };

@@ -1,46 +1,41 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import getTxData from '../../utils/getTxData';
 import socketIO from 'socket.io-client';
+import TxTable from '../table/TxTable';
 
 const Tx = () => {
     const [txData, setTxData] = useState([]);
 
+    const data = useMemo(() => txData, [txData]);
+
     useEffect(() => {
-        const socket = socketIO.connect('http://localhost:4000', {
-            transports: ['websocket'],
-        });
         const init = async () => {
             const result = await getTxData();
             setTxData(result);
         };
 
         init();
+    }, []);
 
-        socket.on('newTx', () => {
-            init();
+    useEffect(() => {
+        const socket = socketIO.connect('http://localhost:4000', {
+            transports: ['websocket'],
+        });
+
+        socket.on('newTx', async (data) => {
+            console.log(data);
+            await setTxData([...data, ...txData]);
         });
 
         return () => {
             socket.disconnect();
         };
-    }, []);
-
-    const dataList = useCallback(() => {
-        return txData.map((v, k) => {
-            return (
-                <ul key={k}>
-                    <li>txHash : {v.txHash}</li>
-                    <li>from : {v.from}</li>
-                    <li>to : {v.to}</li>
-                </ul>
-            );
-        });
     }, [txData]);
 
     return (
-        <div>
-            Tx datas
-            {dataList()}
+        <div style={{}}>
+            <h2 style={{ marginLeft: '2%' }}>Transactions</h2>
+            <TxTable data={data} />
         </div>
     );
 };

@@ -7,7 +7,7 @@ import searchData from '../utils/searchData';
 const SearchBox = styled.div`
     width: 35%;
     height: 50px;
-    border: 2px solid;
+    border: 3px solid;
     border-radius: 10px;
     margin: auto 0;
 `;
@@ -38,7 +38,7 @@ const Search = ({ to, ...rest }) => {
                     <option value="blockNum">Block</option>
                     <option value="txHash">Tx Hash</option>
                 </select>
-                <input id="inputData" placeholder="Search by Address/Tx Hash/Block" className={styles.input} />
+                <input id="inputData" placeholder="Search by Address / Block / Tx Hash" className={styles.input} />
                 <input type="submit" className={styles.btn} value="search" />
             </form>
         </SearchBox>

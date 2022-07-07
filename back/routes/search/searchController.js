@@ -58,7 +58,7 @@ const address = async (req, res) => {
         const txData = [...resultFrom, ...resultTo].sort((a, b) => b.blockNum - a.blockNum);
 
         const result = {
-            address: 1,
+            address: input,
             minedBlocks,
             txData,
         };

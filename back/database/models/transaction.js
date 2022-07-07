@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.BIGINT,
                 allowNull: false,
             },
+            txFee: {
+                type: DataTypes.FLOAT,
+                allowNull: false,
+            },
         },
         {
             tableName: 'Transaction',

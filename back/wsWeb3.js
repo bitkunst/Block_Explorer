@@ -29,25 +29,30 @@ const wsWeb3 = async (io) => {
             };
             await Block.create(newBlock);
         });
+
+        blockArr.forEach(async (block) => {
+            if (block.transactions.length !== 0) {
+                block.transactions.forEach(async (v) => {
+                    const txData = {
+                        txHash: v.hash,
+                        blockNum: v.blockNumber,
+                        timestamp: block.timestamp,
+                        from: v.from,
+                        to: v.to,
+                        value: v.value,
+                        gas: v.gas,
+                        gasPrice: parseInt(v.gasPrice),
+                        txFee: (v.gas * parseInt(v.gasPrice)) / 10 ** 18,
+                    };
+                    await Transaction.create(txData);
+                });
+            }
+        });
     }
 
     web3.eth.subscribe('newBlockHeaders', async (error, result) => {
         try {
             if (!error) {
-                // const {
-                //     number,
-                //     hash: blockHash,
-                //     miner,
-                //     difficulty,
-                //     nonce,
-                //     size,
-                //     gasUsed,
-                //     gasLimit,
-                //     baseFeePerGas,
-                //     extraData,
-                //     timestamp,
-                // } = result;
-
                 const { number } = result;
 
                 const block = await web3.eth.getBlock(number, true);
@@ -85,7 +90,9 @@ const wsWeb3 = async (io) => {
                         value: tx.value,
                         gas: tx.gas,
                         gasPrice: parseInt(tx.gasPrice),
+                        txFee: (tx.gas * parseInt(tx.gasPrice)) / 10 ** 18,
                     };
+                    console.log(txData);
                     await Transaction.create(txData);
                 }
             }
@@ -99,10 +106,51 @@ const wsWeb3 = async (io) => {
         web3.eth.subscribe('newBlockHeaders', async (error, result) => {
             try {
                 if (!error) {
-                    console.log('구독중aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-                    socket.emit('newBlock');
+                    const { number } = result;
 
-                    socket.emit('newTx');
+                    const block = await web3.eth.getBlock(number, true);
+
+                    const blockData = {
+                        number: block.number,
+                        blockHash: block.hash,
+                        miner: block.miner,
+                        difficulty: block.difficulty,
+                        nonce: block.nonce,
+                        size: block.size,
+                        gasUsed: block.gasUsed,
+                        gasLimit: block.gasLimit,
+                        transactions: block.transactions.length,
+                        extraData: block.extraData,
+                        timestamp: block.timestamp,
+                    };
+
+                    socket.emit('newBlock', blockData);
+
+                    const txHashs = [];
+                    if (block.gasUsed !== 0) {
+                        const txBlock = await web3.eth.getBlock(number);
+                        txBlock.transactions.forEach((v) => {
+                            txHashs.push(v);
+                        });
+                    }
+                    const txDatas = [];
+                    for (const hash of txHashs) {
+                        const tx = await web3.eth.getTransaction(hash);
+                        const txData = {
+                            txHash: tx.hash,
+                            blockNum: tx.blockNumber,
+                            timestamp: block.timestamp,
+                            from: tx.from,
+                            to: tx.to,
+                            value: tx.value / 10 ** 18,
+                            gas: tx.gas,
+                            gasPrice: parseInt(tx.gasPrice),
+                            txFee: (tx.gas * parseInt(tx.gasPrice)) / 10 ** 18,
+                        };
+
+                        txDatas.push(txData);
+                    }
+                    socket.emit('newTx', txDatas);
                 }
             } catch (err) {
                 console.log(err);

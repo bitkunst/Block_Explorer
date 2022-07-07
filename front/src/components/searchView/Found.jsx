@@ -2,73 +2,40 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Tx from './address/Tx';
 import Mined from './address/Mined';
+import BlockSearchForm from './BlockSearchForm';
+import TxHashSearchForm from './TxHashSearchForm';
+import styles from '../../public/AddressBtn.module.css';
 
 const Found = () => {
     const { state } = useLocation();
     const [flag, setFlag] = useState(0);
 
-    console.log(state);
-
     if (state.block) {
         const { data } = state;
-        console.log(data);
-        const dataList = () => {
-            return (
-                <>
-                    <h2>Block Height : {data.number}</h2>
-                    <ul>
-                        <li>Block Height : {data.number}</li>
-                        <li>timestamp : {data.timestamp}</li>
-                        <li>Block Hash : {data.blockHash}</li>
-                        <li>Miner : {data.miner}</li>
-                        <li>Difficulty : {data.difficulty}</li>
-                        <li>Nonce : {data.nonce}</li>
-                        <li>Size : {data.size ? data.size : 'null'}</li>
-                        <li>gasUsed : {data.gasUsed}</li>
-                        <li>gasLimit : {data.gasLimit}</li>
-                        <li>Transactions : {data.transactions}</li>
-                        <li>extraData : {data.extraData}</li>
-                    </ul>
-                </>
-            );
-        };
 
-        return <div>{dataList()}</div>;
+        return <BlockSearchForm data={data} />;
     }
 
     if (state.txHash) {
-        const dataList = () => {
-            const { data } = state;
-            return (
-                <>
-                    <h2>Tx Hash : {data.txHash}</h2>
-                    <ul>
-                        <li>Transaction Hash : {data.txHash}</li>
-                        <li>Block Height : {data.blockNum}</li>
-                        <li>Timestamp : {data.timestamp}</li>
-                        <li>From : {data.from}</li>
-                        <li>To : {data.to}</li>
-                        <li>Value : {data.value} ETH</li>
-                        <li>Gas : {data.gas}</li>
-                        <li>
-                            Gas Price : {data.gasPrice} wei ({data.gasPrice / 10 ** 9} Gwei)
-                        </li>
-                    </ul>
-                </>
-            );
-        };
+        const { data } = state;
 
-        return <div>{dataList()}</div>;
+        return <TxHashSearchForm data={data} />;
     }
 
     if (state.address) {
         const { txData, minedBlocks: minedData } = state;
-
+        console.log(txData);
         return (
             <>
-                <ul>
-                    <li onClick={() => setFlag(0)}>Transactions</li>
-                    <li onClick={() => setFlag(1)}>Mined Blocks</li>
+                <h2 style={{ marginLeft: '5%', fontSize: '50px', marginBottom: '0' }}>Address</h2>
+                <h3 style={{ marginLeft: '5%', marginTop: '0', fontSize: '30px' }}>{state.address}</h3>
+                <ul className={styles.addressBtn}>
+                    <li className={styles.Btn} onClick={() => setFlag(0)}>
+                        Transactions
+                    </li>
+                    <li className={styles.Btn} onClick={() => setFlag(1)}>
+                        Mined Blocks
+                    </li>
                 </ul>
                 <div>{flag === 0 ? <Tx txData={txData} /> : <Mined minedData={minedData} />}</div>
             </>

@@ -23,6 +23,10 @@ const Home = () => {
         });
 
         setSocket(socket);
+
+        return () => {
+            socket.disconnect();
+        };
     }, []);
 
     return (

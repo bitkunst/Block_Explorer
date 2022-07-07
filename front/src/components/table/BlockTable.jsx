@@ -1,14 +1,17 @@
 import React from 'react';
-import '../../public/PrevTable.css';
+import '../../public/BlockTable.css';
 
-const BlockPrevTable = ({ data }) => {
+const BlockTable = ({ data }) => {
     const dataList = () => {
         return data.map((v, k) => {
             return (
                 <tr key={k}>
                     <td>{v.number}</td>
-                    <td>{v.blockHash}</td>
+                    <td>{v.timestamp}</td>
+                    <td>{v.transactions}</td>
                     <td>{v.miner}</td>
+                    <td>{v.gasUsed}</td>
+                    <td>{v.gasLimit}</td>
                 </tr>
             );
         });
@@ -18,9 +21,12 @@ const BlockPrevTable = ({ data }) => {
         <table>
             <thead>
                 <tr>
-                    <th>Block Height</th>
-                    <th>Block Hash</th>
+                    <th>Block</th>
+                    <th>Age</th>
+                    <th>Txn</th>
                     <th>Miner</th>
+                    <th>Gas Used</th>
+                    <th>Gas Limit</th>
                 </tr>
             </thead>
             <tbody>{dataList()}</tbody>
@@ -28,4 +34,4 @@ const BlockPrevTable = ({ data }) => {
     );
 };
 
-export default BlockPrevTable;
+export default BlockTable;

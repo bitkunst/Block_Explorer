@@ -7,7 +7,16 @@ const getInfo = async (req, res) => {
     try {
         const result = await Transaction.findAll({ order: [['blockNum', 'DESC']] });
 
-        res.json(result);
+        let modifiedResult = [];
+        result.reduce((acc, v) => {
+            const data = v.toJSON();
+            data.value = web3.utils.fromWei(data.value, 'ether');
+
+            modifiedResult.push(data);
+            return acc;
+        }, modifiedResult);
+
+        res.json(modifiedResult);
     } catch (err) {
         console.log(err);
     }

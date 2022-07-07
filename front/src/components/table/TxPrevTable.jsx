@@ -1,37 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
+import '../../public/PrevTable.css';
 
-import useTable from '../../hooks/useTable';
-import styles from '../../public/Table.module.css';
+const TxPrevTable = ({ data }) => {
+    const dataList = () => {
+        return data.map((v, k) => {
+            return (
+                <tr key={k}>
+                    <td>{v.txHash}</td>
+                    <td>
+                        from : {v.from}
+                        <br />
+                        to : {v.to}
+                    </td>
+                    <td>{v.value} ETH</td>
+                </tr>
+            );
+        });
+    };
 
-const TxPrevTable = ({ data, rowsPerPage }) => {
-    const [page] = useState(1);
-    const { slice } = useTable(data, page, rowsPerPage);
     return (
-        <>
-            <table className={styles.table}>
-                <thead className={styles.tableRowHeader}>
-                    <tr>
-                        <th className={styles.tableHeader}>Tx Hash</th>
-                        <th className={styles.tableHeader}>from / to</th>
-
-                        <th className={styles.tableHeader}>value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {slice.map((el) => (
-                        <tr className={styles.tableRowItems} key={el.txHash}>
-                            <td className={styles.tableCell}>{el.txHash}</td>
-                            <td className={styles.tableCell}>
-                                from : {el.from}
-                                <br />
-                                to : {el.to}
-                            </td>
-                            <td className={styles.tableCell}>{el.value} ETH</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tx Hash</th>
+                    <th>From / To</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>{dataList()}</tbody>
+        </table>
     );
 };
 
